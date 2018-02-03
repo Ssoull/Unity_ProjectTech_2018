@@ -1,15 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour {
 
+    private enum Direction { UP, DOWN, LEFT, RIGHT };
+
 	public Camera leftCamera;
-	public Camera rightCamera;
+    public Camera rightCamera;
 
     [Range(0,10)]
 	public float distanceEntreLesCamera = 5f;
+    public float speedRotation = 5;
 	public int focaleCamera;
+
+    public Toggle toggle;
 
 	// Use this for initialization
 	void Start () {
@@ -17,7 +23,9 @@ public class CameraManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		float diff = rightCamera.transform.position.x - leftCamera.transform.position.x;
+
+        // Distance
+        float diff = rightCamera.transform.position.x - leftCamera.transform.position.x;
 		if (Mathf.Abs(diff) != distanceEntreLesCamera) {
 			float value = distanceEntreLesCamera - diff;
 			Vector3 v = rightCamera.transform.position;
@@ -27,11 +35,51 @@ public class CameraManager : MonoBehaviour {
 			v.x -= value / 2;
 			leftCamera.transform.position = v; 
 		}
-	}
+
+        // Orientation
+        checkRotation(Input.GetKey(KeyCode.DownArrow), Input.GetKey(KeyCode.S), speedRotation * Time.deltaTime, Direction.DOWN);
+        checkRotation(Input.GetKey(KeyCode.LeftArrow), Input.GetKey(KeyCode.Q), -speedRotation * Time.deltaTime, Direction.LEFT);
+        checkRotation(Input.GetKey(KeyCode.RightArrow), Input.GetKey(KeyCode.D), speedRotation * Time.deltaTime, Direction.RIGHT);
+        checkRotation(Input.GetKey(KeyCode.UpArrow), Input.GetKey(KeyCode.Z), -speedRotation * Time.deltaTime, Direction.UP);
+    }
+
+    private void checkRotation(bool rightCamInput, bool leftCamInput, float rotationVal, Direction direction)
+    {
+        float axisRotationValue = 0f;
+
+        bool moveBothCamera = toggle.isOn;
+
+        if (rightCamInput || leftCamInput)
+        {
+            axisRotationValue = rotationVal;
+        }
+
+        if (rightCamInput || moveBothCamera)
+        {
+            checkDirection(rightCamera, direction, axisRotationValue);
+        }
+
+        if (leftCamInput || moveBothCamera)
+        {
+            checkDirection(leftCamera, direction, axisRotationValue);
+        }
+    }
+
+    private void checkDirection(Camera camera, Direction direction, float axisRotationValue)
+    {
+        if (direction == Direction.DOWN || direction == Direction.UP)
+        {
+            camera.transform.Rotate(new Vector3(axisRotationValue, 0f, 0f));
+        }
+        else if (direction == Direction.RIGHT || direction == Direction.LEFT)
+        {
+            camera.transform.Rotate(new Vector3(0f, axisRotationValue, 0f));
+        }
+    }
 
     void OnGUI()
     {
-        GUI.Label(new Rect(10, 10, 300, 40), "Volume des effets sonore : " + distanceEntreLesCamera);
-        distanceEntreLesCamera = GUI.HorizontalSlider(new Rect(10, 50, 200, 10), distanceEntreLesCamera, 0, 10);
+        GUI.Label(new Rect(10, 10, 300, 40), "Distance entre les caméras : " + distanceEntreLesCamera);
+        distanceEntreLesCamera = GUI.HorizontalSlider(new Rect(10, 25, 200, 10), distanceEntreLesCamera, 0, 10);
     }
 }
