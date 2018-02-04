@@ -15,6 +15,9 @@ public class CameraManager : MonoBehaviour {
     public float speedRotation = 5;
 	public int focaleCamera;
 
+    public Text leftCamText;
+    public Text rightCamText;
+
     public Toggle toggle;
 
 	// Use this for initialization
@@ -41,6 +44,10 @@ public class CameraManager : MonoBehaviour {
         checkRotation(Input.GetKey(KeyCode.LeftArrow), Input.GetKey(KeyCode.Q), -speedRotation * Time.deltaTime, Direction.LEFT);
         checkRotation(Input.GetKey(KeyCode.RightArrow), Input.GetKey(KeyCode.D), speedRotation * Time.deltaTime, Direction.RIGHT);
         checkRotation(Input.GetKey(KeyCode.UpArrow), Input.GetKey(KeyCode.Z), -speedRotation * Time.deltaTime, Direction.UP);
+
+        // Angle Information
+        leftCamText.text = "Caméra gauche angles, X : " + leftCamera.transform.eulerAngles.x + ", Y : " + leftCamera.transform.eulerAngles.y + ", Z : " + leftCamera.transform.eulerAngles.z;
+        rightCamText.text = "Caméra droite angles, X : " + rightCamera.transform.eulerAngles.x + ", Y : "  + rightCamera.transform.eulerAngles.y + ", Z : " + rightCamera.transform.eulerAngles.z;
     }
 
     private void checkRotation(bool rightCamInput, bool leftCamInput, float rotationVal, Direction direction)
