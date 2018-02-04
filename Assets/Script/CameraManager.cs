@@ -82,4 +82,11 @@ public class CameraManager : MonoBehaviour {
         GUI.Label(new Rect(10, 10, 300, 40), "Distance entre les caméras : " + distanceEntreLesCamera);
         distanceEntreLesCamera = GUI.HorizontalSlider(new Rect(10, 25, 200, 10), distanceEntreLesCamera, 0, 10);
     }
+
+    public void reset()
+    {
+        distanceEntreLesCamera = 10f;
+        leftCamera.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
+        rightCamera.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
+    }
 }
