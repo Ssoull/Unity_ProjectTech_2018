@@ -11,7 +11,7 @@ public class CameraManager : MonoBehaviour {
     public Camera rightCamera;
 
     [Range(0,10)]
-	public float distanceEntreLesCamera = 5f;
+	public float distanceEntreLesCamera = 10f;
     public float speedRotation = 5;
 	public int focaleCamera;
 
